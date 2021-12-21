@@ -35,7 +35,8 @@ public class FareCalculatorService {
 	}
 
 	private double getTheDurationToBePaid(Date inTime, Date outTime) {
-		double duration = (outTime.getTime() - inTime.getTime()) / (1000 * 60);
+		double duration = ((outTime.getTime() - inTime.getTime())
+				/ (1000 * 60));
 		if (duration <= 30) {
 			duration = 0;
 		}
