@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.service;
 
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
@@ -9,7 +10,7 @@ public class FareCalculatorService {
 
 	public void calculateFare(Ticket ticket) {
 		if ((ticket.getOutTime() == null)
-				|| (ticket.getOutTime().before(ticket.getInTime()))) {
+				|| (ticket.getOutTime().isBefore(ticket.getInTime()))) {
 			throw new IllegalArgumentException("Out time provided is incorrect:"
 					+ ticket.getOutTime().toString());
 		}
@@ -18,15 +19,12 @@ public class FareCalculatorService {
 
 		switch (ticket.getParkingSpot().getParkingType()) {
 			case CAR : {
-				ticket.setPrice(
-						Math.round((duration * Fare.CAR_RATE_PER_HOUR) * 100.0)
-								/ 100.0);
+				ticket.setPrice((duration / 60) * (Fare.CAR_RATE_PER_HOUR));
+
 				break;
 			}
 			case BIKE : {
-				ticket.setPrice(
-						Math.round((duration * Fare.BIKE_RATE_PER_HOUR) * 100.0)
-								/ 100.0);
+				ticket.setPrice((duration / 60) * (Fare.BIKE_RATE_PER_HOUR));
 				break;
 			}
 			default :
@@ -34,14 +32,12 @@ public class FareCalculatorService {
 		}
 	}
 
-	private double getTheDurationToBePaid(Date inTime, Date outTime) {
-		double duration = ((outTime.getTime() - inTime.getTime())
-				/ (1000 * 60));
-		if (duration <= 30) {
-			duration = 0;
-		}
+	private double getTheDurationToBePaid(LocalDateTime inTime,
+			LocalDateTime outTime) {
 
-		return duration / 60;
+		return ((Duration.between(inTime, outTime).toMinutes() <= 30)
+				? 0
+				: Duration.between(inTime, outTime).toMinutes());
 
 	}
 }
