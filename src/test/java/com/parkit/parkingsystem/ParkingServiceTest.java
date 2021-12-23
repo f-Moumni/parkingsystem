@@ -7,7 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,11 +66,13 @@ public class ParkingServiceTest {
 		// given
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		ParkingType parkingType = ParkingType.CAR;
-		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
-		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(true);
-		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCD");
+		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
+		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(true);
+		when(ticketDAO.recurrentUser("ABCD")).thenReturn(true);
+		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
+
 		// When
 		parkingService.processIncomingVehicle();
 		// THEN
@@ -79,6 +81,7 @@ public class ParkingServiceTest {
 	}
 
 	@Test
+
 	void processExitingVehicleTest() throws Exception {
 		// given
 
@@ -87,8 +90,7 @@ public class ParkingServiceTest {
 
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 		Ticket ticket = new Ticket();
-		ticket.setInTime(
-				new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
+		ticket.setInTime(LocalDateTime.now().minusHours(1));
 		ticket.setParkingSpot(parkingSpot);
 		ticket.setVehicleRegNumber("ABCDEF");
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class)))
@@ -98,10 +100,10 @@ public class ParkingServiceTest {
 
 		// When
 		parkingService.processExitingVehicle();
+
 		// THEN
 		verify(ticketDAO, times(1)).getTicket(anyString());
-		verify(parkingSpotDAO, Mockito.times(1))
-				.updateParking(any(ParkingSpot.class));
+		verify(parkingSpotDAO, Mockito.times(1)).updateParking(parkingSpot);
 		verify(ticketDAO, times(1)).updateTicket(ticket);
 	}
 }

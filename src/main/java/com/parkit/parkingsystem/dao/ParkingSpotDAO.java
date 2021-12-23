@@ -67,40 +67,15 @@ public class ParkingSpotDAO {
 					.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING);
 			ps.setString(1, vehicleRegNumber);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				if (rs.getString(1) != null) {
-					result = false;
-				}
+			if (rs.next() && rs.getString(1) != null) {
+
+				result = false;
+
 			}
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
 			logger.error("Error vehicule exit controlling", ex);
-		} finally {
-			dataBaseConfig.closeConnection(con);
-		}
-
-		return result;
-
-	}
-	public boolean recurrentUser(String vehicleRegNumber) {
-		Connection con = null;
-		boolean result = true;
-		try {
-			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con
-					.prepareStatement(DBConstants.GET_VEHICLES_IN_TICKET);
-			ps.setString(1, vehicleRegNumber);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				if (rs.getString(1) != null) {
-					result = false;
-				}
-			}
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
-		} catch (Exception ex) {
-			logger.error("Error fetching  ", ex);
 		} finally {
 			dataBaseConfig.closeConnection(con);
 		}
