@@ -35,7 +35,7 @@ public class ParkingService {
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
 				String vehicleRegNumber = getVehichleRegNumber();
 				if (parkingSpotDAO.vehicleIsInParking(vehicleRegNumber)) {
-					if (parkingSpotDAO.recurrentUser(vehicleRegNumber)) {
+					if (ticketDAO.recurrentUser(vehicleRegNumber)) {
 						System.out.println(
 								"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount");
 					}
@@ -126,6 +126,9 @@ public class ParkingService {
 			LocalDateTime outTime = LocalDateTime.now();
 			ticket.setOutTime(outTime);
 			fareCalculatorService.calculateFare(ticket);
+			if (ticketDAO.recurrentUser(vehicleRegNumber)) {
+				fareCalculatorService.fivePercentDiscount(ticket);
+			}
 			if (ticketDAO.updateTicket(ticket)) {
 				ParkingSpot parkingSpot = ticket.getParkingSpot();
 				parkingSpot.setAvailable(true);

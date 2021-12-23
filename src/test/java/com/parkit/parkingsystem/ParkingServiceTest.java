@@ -70,7 +70,7 @@ public class ParkingServiceTest {
 				.thenReturn("ABCD");
 		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
 		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(true);
-		when(parkingSpotDAO.recurrentUser("ABCD")).thenReturn(true);
+		when(ticketDAO.recurrentUser("ABCD")).thenReturn(true);
 		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
 
 		// When
@@ -90,10 +90,7 @@ public class ParkingServiceTest {
 
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 		Ticket ticket = new Ticket();
-		LocalDateTime thisTime = LocalDateTime.now();
-		ticket.setInTime(LocalDateTime.of(thisTime.getYear(),
-				thisTime.getMonth(), thisTime.getDayOfMonth(),
-				thisTime.getHour() - 1, thisTime.getMinute()));
+		ticket.setInTime(LocalDateTime.now().minusHours(1));
 		ticket.setParkingSpot(parkingSpot);
 		ticket.setVehicleRegNumber("ABCDEF");
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class)))
