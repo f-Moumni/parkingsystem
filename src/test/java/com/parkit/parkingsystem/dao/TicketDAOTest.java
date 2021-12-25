@@ -17,7 +17,7 @@ class TicketDAOTest {
 	TicketDAO ticketDAO = new TicketDAO();
 	Ticket ticket = new Ticket();
 	@BeforeEach
-	private void setUpPerTest() {
+	private void setUpTest() {
 		ticketDAO = new TicketDAO();
 		ticket = new Ticket();
 		ticket.setVehicleRegNumber("ABCD");
