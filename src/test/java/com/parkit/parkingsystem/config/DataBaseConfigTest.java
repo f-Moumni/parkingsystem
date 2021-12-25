@@ -28,7 +28,7 @@ class DataBaseConfigTest {
 	public void setUp() throws ClassNotFoundException, SQLException {
 		dataBaseConfig = new DataBaseConfig();
 		connection = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/prod", "root", "rootroot");
+				"jdbc:mysql://localhost:3306/test", "root", "rootroot");
 		preparedstatement = connection.prepareStatement("select * from ticket");
 	}
 
