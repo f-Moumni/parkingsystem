@@ -61,19 +61,25 @@ public class ParkingSpotDAO {
 	public boolean vehicleIsInParking(String vehicleRegNumber) {
 		Connection con = null;
 		boolean result = true;
+
 		try {
-			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con
-					.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING);
-			ps.setString(1, vehicleRegNumber);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next() && rs.getString(1) != null) {
+			if (vehicleRegNumber != null) {
+				con = dataBaseConfig.getConnection();
+				PreparedStatement ps = con
+						.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING);
+				ps.setString(1, vehicleRegNumber);
+				ResultSet rs = ps.executeQuery();
 
-				result = false;
+				if (rs.next() && rs.getString(1) != null) {
 
+					result = false;
+
+				}
+				dataBaseConfig.closeResultSet(rs);
+				dataBaseConfig.closePreparedStatement(ps);
+			} else {
+				throw new Exception("Null vehicle RegNumber ");
 			}
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
 			logger.error("Error vehicule exit controlling", ex);
 		} finally {

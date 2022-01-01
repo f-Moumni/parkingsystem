@@ -1,10 +1,9 @@
 package com.parkit.parkingsystem.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,53 +11,55 @@ import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import nl.altindag.log.LogCaptor;
 @ExtendWith(MockitoExtension.class)
 class DataBaseConfigTest {
+	DataBaseConfig dataBaseConfig;
+	private static LogCaptor logCaptor;
 
-	DataBaseConfig dataBaseConfig = new DataBaseConfig();
-
-	private Connection connection;
-
-	private ResultSet resultSet;
-
-	private PreparedStatement preparedstatement;
+	@Mock
+	Connection connection;
+	@Mock
+	PreparedStatement preparedStatement;
+	@Mock
+	ResultSet resultSet;
 
 	@BeforeEach
-	public void setUp() throws ClassNotFoundException, SQLException {
+	private void setUpTest() throws ClassNotFoundException, SQLException {
 		dataBaseConfig = new DataBaseConfig();
-		connection = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/test", "root", "rootroot");
-		preparedstatement = connection.prepareStatement("select * from ticket");
+		logCaptor = LogCaptor.forName("DataBaseConfig");
+		logCaptor.setLogLevelToInfo();
+		// when(dataBaseConfig.getConnection()).thenReturn(con);
 	}
 
 	@Test
-	void getConnection_shouldNotReturnNull()
-			throws ClassNotFoundException, SQLException {
-
-		assertThat(dataBaseConfig.getConnection()).isNotNull();
-	}
-	@Test
-	void closeConnection_shouldCloseConnection() throws SQLException {
-
-		// When
+	void closeConnection_withExpetion_shouldlogError() throws SQLException {
+		doThrow(SQLException.class).when(connection).close();
 		dataBaseConfig.closeConnection(connection);
-		// then
-		assertTrue(connection.isClosed());
+		assertThat(logCaptor.getErrorLogs())
+				.contains("Error while closing connection");
+		assertThat(connection.isClosed()).isFalse();
 
 	}
 	@Test
-	void closePreparedStatement_shouldclosePreparedStatement()
+	void closePreparedStatement_withExpetion_shouldlogError()
 			throws SQLException {
-
-		dataBaseConfig.closePreparedStatement(preparedstatement);
-		assertTrue(preparedstatement.isClosed());
+		doThrow(SQLException.class).when(preparedStatement).close();
+		dataBaseConfig.closePreparedStatement(preparedStatement);
+		assertThat(logCaptor.getErrorLogs())
+				.contains("Error while closing prepared statement");
+		assertThat(connection.isClosed()).isFalse();
 	}
 	@Test
-	void closeResult_shouldcloseResultSet() throws SQLException {
-		resultSet = preparedstatement.executeQuery();
+	void closeResultSet_withExpetion_shouldlogError() throws SQLException {
+		doThrow(SQLException.class).when(resultSet).close();
 		dataBaseConfig.closeResultSet(resultSet);
-		assertTrue(resultSet.isClosed());
+		assertThat(logCaptor.getErrorLogs())
+				.contains("Error while closing result set");
+		assertThat(connection.isClosed()).isFalse();
 	}
 
 }

@@ -47,16 +47,28 @@ class ParkingSpotTest {
 	}
 	@Test
 	void equalsTest_withAnEqualObject_shouldReturnTrue() {
-		ParkingSpot secondParkingSpot = new ParkingSpot(1, ParkingType.CAR,
-				true);
-		boolean result = parkingSpot.equals(secondParkingSpot);
+		Object o = new ParkingSpot(1, ParkingType.CAR, true);
+		boolean result = parkingSpot.equals(o);
 		assertThat(result).isTrue();
 	}
 	@Test
+	void equalsTest_sammeParkingSpotObjcet_shouldReturnTrue() {
+
+		boolean result = parkingSpot.equals(parkingSpot);
+		assertThat(result).isTrue();
+	}
+
+	@Test
 	void equalsTest_withAnUnEqualObject_shouldReturnFalse() {
-		ParkingSpot secondParkingSpot = new ParkingSpot(4, ParkingType.BIKE,
-				true);
-		boolean result = parkingSpot.equals(secondParkingSpot);
+
+		Object o = new ParkingSpot(4, ParkingType.BIKE, true);
+		boolean result = parkingSpot.equals(o);
+		assertThat(result).isFalse();
+	}
+	@Test
+	void equalsTest_withNewObject_shouldReturnFalse() {
+		Object o = new Object();
+		boolean result = parkingSpot.equals(o);
 		assertThat(result).isFalse();
 	}
 	@Test

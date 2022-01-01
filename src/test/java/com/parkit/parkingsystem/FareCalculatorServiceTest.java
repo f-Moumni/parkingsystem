@@ -90,6 +90,18 @@ class FareCalculatorServiceTest {
 		assertThrows(IllegalArgumentException.class,
 				() -> fareCalculatorService.calculateFare(ticket));
 	}
+	@Test
+	void calculateFareBikeWithNullOutTime() {
+
+		LocalDateTime inTime = LocalDateTime.now().plusHours(1);
+		LocalDateTime outTime = null;
+		ParkingSpot parkingSpot = new ParkingSpot(4, ParkingType.BIKE, false);
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		assertThrows(NullPointerException.class,
+				() -> fareCalculatorService.calculateFare(ticket));
+	}
 
 	@Test
 	void calculateFareBikeWithLessThanOneHourParkingTime() {
@@ -285,4 +297,55 @@ class FareCalculatorServiceTest {
 		// Then
 		assertEquals(Precision.round(fare, 2), ticket.getPrice());
 	}
+
+	@Test
+	void getTheDurationToBePaidTest_forMoreThen30Minutes() {
+		LocalDateTime inTime = LocalDateTime.now();
+		LocalDateTime outTime = LocalDateTime.now().plusHours(1);
+		double duration = fareCalculatorService.getTheDurationToBePaid(inTime,
+				outTime);
+		assertThat(duration).isEqualTo(60);
+	}
+	@Test
+	void getTheDurationToBePaidTest_forLessThen30Minutes() {
+		LocalDateTime inTime = LocalDateTime.now();
+		LocalDateTime outTime = LocalDateTime.now().plusMinutes(15);
+		double duration = fareCalculatorService.getTheDurationToBePaid(inTime,
+				outTime);
+		assertThat(duration).isZero();
+	}
+	@Test
+	void getTheDurationToBePaidTest_for30Minutes() {
+		LocalDateTime inTime = LocalDateTime.now();
+		LocalDateTime outTime = LocalDateTime.now().plusMinutes(30);
+		double duration = fareCalculatorService.getTheDurationToBePaid(inTime,
+				outTime);
+		assertThat(duration).isZero();
+	}
+	@Test
+	void fivePercentDiscountTest_for30Minutes() {
+		ticket.setInTime(LocalDateTime.now());
+		ticket.setOutTime(LocalDateTime.now().plusMinutes(30));
+		ticket.setParkingSpot(new ParkingSpot(4, ParkingType.BIKE, true));
+		ticket.setVehicleRegNumber("ABCD");
+		fareCalculatorService.fivePercentDiscount(ticket);
+
+		assertThat(ticket.getPrice()).isEqualTo(0);
+
+	}
+	@Test
+	void fivePercentDiscountTest_forMoreThen30Minutes() {
+		ticket.setInTime(LocalDateTime.now());
+		ticket.setOutTime(LocalDateTime.now().plusHours(1));
+		ticket.setParkingSpot(new ParkingSpot(4, ParkingType.BIKE, true));
+		ticket.setVehicleRegNumber("ABCD");
+		ticket.setPrice(Precision.round(Fare.BIKE_RATE_PER_HOUR, 2));
+
+		double reducedPrice = ticket.getPrice() - (ticket.getPrice() * 0.05);
+		fareCalculatorService.fivePercentDiscount(ticket);
+
+		assertThat(ticket.getPrice()).isEqualTo(reducedPrice);
+
+	}
+
 }

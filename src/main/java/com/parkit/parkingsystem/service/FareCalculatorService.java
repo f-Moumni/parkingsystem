@@ -36,7 +36,7 @@ public class FareCalculatorService {
 		ticket.setPrice(fare);
 	}
 
-	private double getTheDurationToBePaid(LocalDateTime inTime,
+	public double getTheDurationToBePaid(LocalDateTime inTime,
 			LocalDateTime outTime) {
 
 		return ((Duration.between(inTime, outTime).toMinutes() <= 30)

@@ -65,9 +65,12 @@ public class ParkingService {
 									+ parkingSpot.getId());
 					System.out.println("Recorded in-time for vehicle number:"
 							+ vehicleRegNumber + " is:" + LocalDateTime.now());
-				} else
+				} else {
 					System.out
 							.println("this vehicle is already in the parking");
+					throw new Exception(
+							"Error vehicle is already in the parking");
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Unable to process incoming vehicle", e);
@@ -81,7 +84,7 @@ public class ParkingService {
 	}
 
 	public ParkingSpot getNextParkingNumberIfAvailable() {
-		int parkingNumber;
+		int parkingNumber = 0;
 		ParkingSpot parkingSpot = null;
 		try {
 			ParkingType parkingType = getVehichleType();
@@ -100,7 +103,7 @@ public class ParkingService {
 		return parkingSpot;
 	}
 
-	public ParkingType getVehichleType() {
+	private ParkingType getVehichleType() {
 		System.out.println("Please select vehicle type from menu");
 		System.out.println("1 CAR");
 		System.out.println("2 BIKE");
