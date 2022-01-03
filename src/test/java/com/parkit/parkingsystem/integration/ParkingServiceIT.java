@@ -64,7 +64,7 @@ class ParkingServiceIT {
 	}
 	@AfterAll
 	private static void tearDownAfterClass() {
-
+		dataBasePrepareService.clearDataBaseEntries();
 	}
 
 	@Test

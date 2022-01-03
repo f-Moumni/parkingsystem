@@ -6,9 +6,11 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,27 +37,26 @@ class InteractiveShellTest {
 
 	@BeforeEach
 	private void setUpPerTest() {
-		interactiveShell = new InteractiveShell();
+
 		logCaptor = LogCaptor.forName("InteractiveShell");
 		logCaptor.setLogLevelToInfo();
 		System.setOut(new PrintStream(outContent));
 
 	}
-	// public int getInput(String input) {
-	//
-	// Scanner scan = new Scanner(new ByteArrayInputStream(input.getBytes()));
-	// return Integer.parseInt(scan.nextLine());
-	// }
-	// @Test
+	@Disabled
+	@Test
 	void loadInterfaceTest_processIncomingVehicleChoose() {
 
-		Scanner scan = new Scanner(new ByteArrayInputStream("1".getBytes()));
-		// return Integer.parseInt(scan.nextLine());
-		int input = Integer.parseInt(scan.nextLine());;
-		// InputStream in = new ByteArrayInputStream(input.getBytes());
-		// System.setIn(in);
-		when(inputReaderUtil.readSelection()).thenReturn(input);
-		// interactiveShell = new InteractiveShell();
+		// Given
+		System.setIn(System.in);
+		String in = "1";
+
+		ByteArrayInputStream stream = new ByteArrayInputStream(
+				in.getBytes(StandardCharsets.UTF_8));
+		System.setIn(stream);
+
+		when(inputReaderUtil.readSelection()).thenReturn(1);
+
 		InteractiveShell.loadInterface();
 		assertThat(outContent.toString()).contains(
 				"Please select an option. Simply enter the number to choose an action");
