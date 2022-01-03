@@ -1,7 +1,9 @@
 package com.parkit.parkingsystem.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +36,6 @@ class DataBaseConfigTest {
 		logCaptor.setLogLevelToInfo();
 		// when(dataBaseConfig.getConnection()).thenReturn(con);
 	}
-
 	@Test
 	void closeConnection_withExpetion_shouldlogError() throws SQLException {
 		doThrow(SQLException.class).when(connection).close();
@@ -42,6 +43,15 @@ class DataBaseConfigTest {
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error while closing connection");
 		assertThat(connection.isClosed()).isFalse();
+
+	}
+	@Test
+	void closeConnection_shouldCloseConection() throws SQLException {
+		doReturn(true).when(connection).isClosed();
+		dataBaseConfig.closeConnection(connection);
+		assertThat(logCaptor.getInfoLogs()).contains("Closing DB connection");
+		assertThat(connection.isClosed()).isTrue();
+		verify(connection).close();
 
 	}
 	@Test

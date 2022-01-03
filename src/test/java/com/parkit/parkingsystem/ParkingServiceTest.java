@@ -101,25 +101,6 @@ public class ParkingServiceTest {
 		assertThat(parkingSpot).isNull();
 	}
 
-	// @Test
-	//
-	// void
-	// getNextParkingNumberIfAvailableTest_withIllegalArgumentExceptionInGetVehichleType()
-	// {
-	//
-	// // Given
-	//
-	// when(inputReaderUtil.readSelection())
-	// .thenThrow(IllegalArgumentException.class);
-	//
-	// // When
-	// parkingService.getNextParkingNumberIfAvailable();
-	//
-	// // then
-	//
-	// assertThat(logCaptor.getErrorLogs())
-	// .contains("Error parsing user input for type of vehicle");
-	// }
 	@Test
 	void processIncomingVehicleTest_forCar() throws Exception {
 		// given
@@ -128,7 +109,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCD");
 		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
-		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(true);
+		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(false);
 		when(ticketDAO.recurrentUser("ABCD")).thenReturn(true);
 		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
 
@@ -149,7 +130,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCD");
 		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
-		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(true);
+		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(false);
 		when(ticketDAO.recurrentUser("ABCD")).thenReturn(false);
 		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
 
@@ -185,7 +166,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCD");
 		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
-		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(false);
+		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(true);
 
 		// When
 		parkingService.processIncomingVehicle();
@@ -198,25 +179,6 @@ public class ParkingServiceTest {
 		verify(parkingSpotDAO, times(1)).vehicleIsInParking("ABCD");
 
 	}
-	// @Test
-	// void processIncomingVehicleTest_forNullParkingSpot() throws Exception {
-	// // given
-	// when(inputReaderUtil.readSelection()).thenReturn(1);
-	// when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class)))
-	// .thenReturn(0);
-	// // when(inputReaderUtil.readVehicleRegistrationNumber())
-	// // .thenThrow(Exception.class);
-	// //
-	// // ICI////////////
-	// // When
-	// parkingService.processIncomingVehicle();
-	// // THEN
-	// assertThat(logCaptor.getErrorLogs())
-	// .contains("Error fetching next available parking slot");
-	// verify(parkingSpotDAO, times(1))
-	// .getNextAvailableSlot(any(ParkingType.class));
-	//
-	// }
 
 	@Test
 	void processExitingVehicleTest_forANewUser() throws Exception {

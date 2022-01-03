@@ -1,42 +1,67 @@
 package com.parkit.parkingsystem.util;
 
 public class InputReaderUtilTest {
-	InputReaderUtil inputReaderUtil;
+	// InputReaderUtil inputReaderUtil;
 	// private static LogCaptor logCaptor;
-	// InputStream in;
-	// @BeforeAll
-	// private void setU() {
+	// InputStream stream;
 	//
+	// @BeforeAll
+	// static void setUp() {
+	// // logCaptor.resetLogLevel();
 	// }
 	// @BeforeEach
 	// private void setUpPerTest() {
-	//
+	// // inputReaderUtil = new InputReaderUtil();
 	// logCaptor = LogCaptor.forName("InputReaderUtil");
 	// logCaptor.setLogLevelToInfo();
+	//
 	// }
 	//
 	// @Test
-	// void readSelectionTest_withValideInput() throws IOException {
+	// void readSelectionTest_withValidInput() throws IOException {
+	// // Given
+	// // System.setIn(System.in);
+	// String in = "1";
 	//
-	// String input = "1";
-	// InputStream in = new ByteArrayInputStream(input.getBytes());
-	// System.setIn(in);
+	// stream = new ByteArrayInputStream(in.getBytes());
+	// System.setIn(stream);
 	// inputReaderUtil = new InputReaderUtil();
-	// assertEquals(1, inputReaderUtil.readSelection());
-	// in.close();
+	// System.in.read(in.getBytes());
+	// // When
+	// inputReaderUtil.readSelection();
+	// // then
+	//
+	// assertThat(inputReaderUtil.readSelection()).isEqualTo(1);
+	// System.setIn(System.in);
+	// stream.close();
+	// // String data = "1";
+	// // InputStream stdin = System.in;
+	// // try {
+	// // System.setIn(new ByteArrayInputStream(data.getBytes()));
+	// // Scanner scanner = new Scanner(System.in);
+	// // System.in.read(scanner.nextLine());
+	// // } finally {
+	// // System.setIn(stdin);
+	// // }
 	//
 	// }
-	// @Test
-	// void readSelectionTest_WithInvalideInput() throws IOException {
+	// // @Test
+	// void readSelectionTest_WithInvalidInput() throws IOException {
 	//
-	// String input = "A";
-	// InputStream in = new ByteArrayInputStream(input.getBytes());
-	// System.setIn(in);
+	// String input = "p";
+	// stream = new ByteArrayInputStream(input.getBytes());
+	// System.setIn(stream);
 	// inputReaderUtil = new InputReaderUtil();
-	// assertEquals(-1, inputReaderUtil.readSelection());
+	//
+	// logCaptor = LogCaptor.forName("InputReaderUtil");
+	//
+	// logCaptor.setLogLevelToInfo();
+	// // assertThat(inputReaderUtil.readSelection()).isEqualTo(-1);
 	// assertThat(logCaptor.getErrorLogs())
 	// .contains("Error while reading user input from Shell");
-	// in.close();
+	// System.setIn(System.in);
+	// stream.close();
+	// logCaptor.clearLogs();
 	// }
 
 }

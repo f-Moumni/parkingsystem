@@ -34,7 +34,7 @@ public class ParkingService {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
 				String vehicleRegNumber = getVehichleRegNumber();
-				if (parkingSpotDAO.vehicleIsInParking(vehicleRegNumber)) {
+				if (!parkingSpotDAO.vehicleIsInParking(vehicleRegNumber)) {
 					if (ticketDAO.recurrentUser(vehicleRegNumber)) {
 						System.out.println(
 								"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount");

@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,18 +41,22 @@ class InteractiveShellTest {
 		System.setOut(new PrintStream(outContent));
 
 	}
-	public int getInput(String input) {
-
-		Scanner scan = new Scanner(new ByteArrayInputStream(input.getBytes()));
-		return Integer.parseInt(scan.nextLine());
-	}
+	// public int getInput(String input) {
+	//
+	// Scanner scan = new Scanner(new ByteArrayInputStream(input.getBytes()));
+	// return Integer.parseInt(scan.nextLine());
+	// }
 	// @Test
 	void loadInterfaceTest_processIncomingVehicleChoose() {
-		// String input = "1";
+
+		Scanner scan = new Scanner(new ByteArrayInputStream("1".getBytes()));
+		// return Integer.parseInt(scan.nextLine());
+		int input = Integer.parseInt(scan.nextLine());;
 		// InputStream in = new ByteArrayInputStream(input.getBytes());
 		// System.setIn(in);
-		// when(inputReaderUtil.readSelection()).thenReturn(1);
-		interactiveShell.loadInterface();
+		when(inputReaderUtil.readSelection()).thenReturn(input);
+		// interactiveShell = new InteractiveShell();
+		InteractiveShell.loadInterface();
 		assertThat(outContent.toString()).contains(
 				"Please select an option. Simply enter the number to choose an action");
 		assertThat(outContent.toString())
