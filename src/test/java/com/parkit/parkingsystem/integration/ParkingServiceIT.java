@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class ParkingServiceIT {
 	@Mock
 	private static InputReaderUtil inputReaderUtil;
 
-	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
 	@BeforeAll
 	private static void setUp() throws Exception {
@@ -59,12 +60,13 @@ class ParkingServiceIT {
 		dataBasePrepareService.clearDataBaseEntries();
 		logCaptor = LogCaptor.forName("ParkingService");
 		logCaptor.setLogLevelToInfo();
-		System.setOut(new PrintStream(outContent));
 		dataBasePrepareService.clearDataBaseEntries();
+
 	}
-	@AfterAll
-	private static void tearDownAfterClass() {
+	@AfterEach
+	void tearDownAfterClass() throws IOException {
 		dataBasePrepareService.clearDataBaseEntries();
+
 	}
 
 	@Test
@@ -72,18 +74,23 @@ class ParkingServiceIT {
 		// Given
 		parkingService.processIncomingVehicle();
 		// when
+		System.setOut(new PrintStream(outContent));
 		parkingService.processIncomingVehicle();
 		// Then
-
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Unable to process incoming vehicle");
 
 	}
 	@Test
-	void processIncomingVehicle_forARecurringUser() {
+	void processIncomingVehicle_forARecurringUser()
+			throws InterruptedException, IOException {
 		// Given
+
 		parkingService.processIncomingVehicle();
+		TimeUnit.SECONDS.sleep(1);
 		parkingService.processExitingVehicle();
+		TimeUnit.SECONDS.sleep(1);
+		System.setOut(new PrintStream(outContent));
 		// when
 		parkingService.processIncomingVehicle();
 		// Then
@@ -95,17 +102,18 @@ class ParkingServiceIT {
 	void testParkingLotExit_forARecurringUser() throws InterruptedException {
 		// Given
 		parkingService.processIncomingVehicle();
+		TimeUnit.SECONDS.sleep(1);
 		parkingService.processExitingVehicle();
 		TimeUnit.SECONDS.sleep(1);
 		parkingService.processIncomingVehicle();
-
+		TimeUnit.SECONDS.sleep(1);
 		// when
 		parkingService.processExitingVehicle();
 		// Then
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
 		assertThat(ticket.getOutTime()).isNotNull();
 
-		assertThat(ticket.getPrice()).isEqualTo(0);
+		assertThat(ticket.getPrice()).isZero();
 
 	}
 

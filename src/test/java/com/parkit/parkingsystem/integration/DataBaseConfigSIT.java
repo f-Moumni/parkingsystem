@@ -3,6 +3,7 @@ package com.parkit.parkingsystem.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -34,7 +35,7 @@ class DataBaseConfigSIT {
 
 	@Test
 	void getConnection_shouldNotReturnNull()
-			throws ClassNotFoundException, SQLException {
+			throws ClassNotFoundException, SQLException, IOException {
 
 		assertThat(dataBaseConfig.getConnection()).isNotNull();
 	}

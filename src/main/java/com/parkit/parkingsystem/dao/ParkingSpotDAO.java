@@ -57,8 +57,9 @@ public class ParkingSpotDAO {
 			LOGGER.error("Error updating parking info", ex);
 			return false;
 		} finally {
-
-			dataBaseConfig.closePreparedStatement(ps);
+			if (ps != null) {
+				dataBaseConfig.closePreparedStatement(ps);
+			}
 			dataBaseConfig.closeConnection(con);
 
 		}

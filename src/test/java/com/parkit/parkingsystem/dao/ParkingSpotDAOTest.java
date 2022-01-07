@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,13 +34,14 @@ class ParkingSpotDAOTest {
 	private static DataBaseTestConfig dataBaseTestConfig;
 
 	@Mock
-	PreparedStatement ps;
+	private static PreparedStatement ps;
 	@Mock
-	ResultSet rs;
+	private static ResultSet rs;
 	@Mock
-	Connection connection;
+	private static Connection connection;
 	@BeforeEach
-	public void setUp() throws ClassNotFoundException, SQLException {
+	public void setUp()
+			throws ClassNotFoundException, SQLException, IOException {
 		parkingSpotDAO = new ParkingSpotDAO();
 		parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
 		logCaptor = LogCaptor.forName("ParkingSpotDAO");
@@ -72,7 +74,7 @@ class ParkingSpotDAOTest {
 				.isEqualTo(4);
 	}
 	@Test
-	void getNextAvailableSlot_WithSQLException_ShouldLogError()
+	void getNextAvailableSlot_WithDatabaseAccesError__ShouldLogError()
 			throws SQLException {
 		when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT))
 				.thenReturn(ps);
@@ -86,7 +88,7 @@ class ParkingSpotDAOTest {
 	}
 
 	@Test
-	void getNextAvailableSlot_WithFullParking_ShouldLogError()
+	void getNextAvailableSlot_WithFullParking_ShouldReturnMinusOne()
 			throws SQLException {
 		when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT))
 				.thenReturn(ps);
@@ -121,12 +123,12 @@ class ParkingSpotDAOTest {
 	}
 
 	@Test
-	void updateParking_withSQLException_shouldReturnFalseAndLogError()
+	void updateParking_withDatabaseAccesError_shouldReturnFalseAndLogError()
 			throws SQLException {
 		ParkingSpot parkingSpot = new ParkingSpot(4, ParkingType.BIKE, false);
 		when(connection.prepareStatement(DBConstants.UPDATE_PARKING_SPOT))
-				.thenReturn(ps);
-		when(ps.executeUpdate()).thenThrow(SQLException.class);
+				.thenThrow(SQLException.class);
+		// when(ps.executeUpdate()).thenThrow(SQLException.class);
 
 		assertFalse(parkingSpotDAO.updateParking(parkingSpot));
 		assertThat(logCaptor.getErrorLogs())
@@ -179,4 +181,5 @@ class ParkingSpotDAOTest {
 		assertFalse(parkingSpotDAO.vehicleIsInParking(vehicleRegNumber));
 
 	}
+
 }

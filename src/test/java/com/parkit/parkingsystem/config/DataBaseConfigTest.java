@@ -1,10 +1,9 @@
 package com.parkit.parkingsystem.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,12 +29,15 @@ class DataBaseConfigTest {
 	ResultSet resultSet;
 
 	@BeforeEach
-	private void setUpTest() throws ClassNotFoundException, SQLException {
+	private void setUpTest()
+			throws ClassNotFoundException, SQLException, FileNotFoundException {
 		dataBaseConfig = new DataBaseConfig();
+
 		logCaptor = LogCaptor.forName("DataBaseConfig");
 		logCaptor.setLogLevelToInfo();
-		// when(dataBaseConfig.getConnection()).thenReturn(con);
+
 	}
+
 	@Test
 	void closeConnection_withExpetion_shouldlogError() throws SQLException {
 		doThrow(SQLException.class).when(connection).close();
@@ -45,15 +47,7 @@ class DataBaseConfigTest {
 		assertThat(connection.isClosed()).isFalse();
 
 	}
-	@Test
-	void closeConnection_shouldCloseConection() throws SQLException {
-		doReturn(true).when(connection).isClosed();
-		dataBaseConfig.closeConnection(connection);
-		assertThat(logCaptor.getInfoLogs()).contains("Closing DB connection");
-		assertThat(connection.isClosed()).isTrue();
-		verify(connection).close();
 
-	}
 	@Test
 	void closePreparedStatement_withExpetion_shouldlogError()
 			throws SQLException {

@@ -19,15 +19,16 @@ public class FareCalculatorService {
 		double duration = getTheDurationToBePaid(ticket.getInTime(),
 				ticket.getOutTime());
 		double fare = 0;
+		int minuteInHour = 60;
 		switch (ticket.getParkingSpot().getParkingType()) {
 			case CAR : {
-				fare = Precision.round((duration / 60) * Fare.CAR_RATE_PER_HOUR,
-						2);
+				fare = Precision.round(
+						(duration / minuteInHour) * Fare.CAR_RATE_PER_HOUR, 2);
 				break;
 			}
 			case BIKE : {
-				fare = Precision
-						.round((duration / 60) * Fare.BIKE_RATE_PER_HOUR, 2);
+				fare = Precision.round(
+						(duration / minuteInHour) * Fare.BIKE_RATE_PER_HOUR, 2);
 				break;
 			}
 			default :
