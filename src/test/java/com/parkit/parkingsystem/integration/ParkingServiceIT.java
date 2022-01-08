@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -20,7 +21,6 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
-import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
@@ -70,6 +70,7 @@ class ParkingServiceIT {
 	}
 
 	@Test
+	@DisplayName("check that the same vehicle does not enter in the parking twice")
 	void processIncomingVehicle_forAVehicleAlreadyInTheParking() {
 		// Given
 		parkingService.processIncomingVehicle();
@@ -82,6 +83,7 @@ class ParkingServiceIT {
 
 	}
 	@Test
+	@DisplayName("that the 5% discount message is displayed for Recurring user")
 	void processIncomingVehicle_forARecurringUser()
 			throws InterruptedException, IOException {
 		// Given
@@ -98,23 +100,4 @@ class ParkingServiceIT {
 				"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount");
 
 	}
-	@Test
-	void testParkingLotExit_forARecurringUser() throws InterruptedException {
-		// Given
-		parkingService.processIncomingVehicle();
-		TimeUnit.SECONDS.sleep(1);
-		parkingService.processExitingVehicle();
-		TimeUnit.SECONDS.sleep(1);
-		parkingService.processIncomingVehicle();
-		TimeUnit.SECONDS.sleep(1);
-		// when
-		parkingService.processExitingVehicle();
-		// Then
-		Ticket ticket = ticketDAO.getTicket("ABCDEF");
-		assertThat(ticket.getOutTime()).isNotNull();
-
-		assertThat(ticket.getPrice()).isZero();
-
-	}
-
 }

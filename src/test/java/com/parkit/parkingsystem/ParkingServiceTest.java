@@ -55,26 +55,31 @@ public class ParkingServiceTest {
 
 	}
 	@Test
+
 	void getNextParkingNumberIfAvailableTest() {
+		// Given
 		ParkingType parkingType = ParkingType.CAR;
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(parkingType)).thenReturn(1);
+		// When
 		ParkingSpot parkingSpot = parkingService
 				.getNextParkingNumberIfAvailable();
-
+		// Then
 		verify(parkingSpotDAO, times(1))
 				.getNextAvailableSlot(any(ParkingType.class));
 		verify(inputReaderUtil, times(1)).readSelection();
 		assertThat(parkingSpot.getParkingType()).isEqualTo(ParkingType.CAR);
 	}
 	@Test
-	void getNextParkingNumberIfAvailableTest_withNullParkingType() {
-
+	void getNextParkingNumberIfAvailableTest_withNullParkingType_ShouldLogError() {
+		// Given
 		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class)))
 				.thenThrow(NullPointerException.class);
+		// When
 		ParkingSpot parkingSpot = parkingService
 				.getNextParkingNumberIfAvailable();
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error fetching next available parking slot");
 		verify(parkingSpotDAO, times(1))
@@ -83,16 +88,16 @@ public class ParkingServiceTest {
 		assertThat(parkingSpot).isNull();
 	}
 	@Test
-	void getNextParkingNumberIfAvailableTest_ForFullParkingSolts() {
-
+	void getNextParkingNumberIfAvailableTest_ForFullParkingSolts_ShouldLogError() {
+		// Given
 		when(inputReaderUtil.readSelection()).thenReturn(2);
 
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class)))
 				.thenReturn(0);
-
+		// When
 		ParkingSpot parkingSpot = parkingService
 				.getNextParkingNumberIfAvailable();
-
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error fetching next available parking slot");
 		verify(parkingSpotDAO, times(1))
@@ -112,7 +117,6 @@ public class ParkingServiceTest {
 		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(false);
 		when(ticketDAO.recurrentUser("ABCD")).thenReturn(true);
 		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
-
 		// When
 		parkingService.processIncomingVehicle();
 		// THEN
@@ -133,7 +137,6 @@ public class ParkingServiceTest {
 		when(parkingSpotDAO.vehicleIsInParking("ABCD")).thenReturn(false);
 		when(ticketDAO.recurrentUser("ABCD")).thenReturn(false);
 		ParkingSpot parkingSpot = new ParkingSpot(1, parkingType, true);
-
 		// When
 		parkingService.processIncomingVehicle();
 		// THEN
@@ -144,13 +147,12 @@ public class ParkingServiceTest {
 		verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
 	}
 	@Test
-	void processIncomingVehicleTest_forOthreParkingType() throws Exception {
+	void processIncomingVehicleTest_forOthreParkingType_shouldlogError()
+			throws Exception {
 		// given
 		when(inputReaderUtil.readSelection()).thenReturn(3);
-
 		// When
 		parkingService.processIncomingVehicle();
-
 		// THEN
 		assertThat(outContent.toString()).contains("Incorrect input provided");
 		assertThat(logCaptor.getErrorLogs())
@@ -161,6 +163,7 @@ public class ParkingServiceTest {
 	@Test
 	void processIncomingVehicle_forAVehicleAlreadyInTheParking()
 			throws Exception {
+		// Given
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		ParkingType parkingType = ParkingType.CAR;
 		when(inputReaderUtil.readVehicleRegistrationNumber())
@@ -186,7 +189,6 @@ public class ParkingServiceTest {
 
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCDEF");
-
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 		Ticket ticket = new Ticket();
 		ticket.setInTime(LocalDateTime.now().minusHours(1));
@@ -197,7 +199,6 @@ public class ParkingServiceTest {
 				.thenReturn(true);
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-
 		// When
 		parkingService.processExitingVehicle();
 
@@ -217,7 +218,6 @@ public class ParkingServiceTest {
 	@Test
 	void processExitingVehicle_forARecurringUser() throws Exception {
 		// given
-
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCDEF");
 
@@ -231,10 +231,8 @@ public class ParkingServiceTest {
 				.thenReturn(true);
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-
 		// When
 		parkingService.processExitingVehicle();
-
 		// THEN
 		assertThat(outContent.toString())
 				.contains("Please pay the parking fare:" + ticket.getPrice());
@@ -250,7 +248,6 @@ public class ParkingServiceTest {
 	@Test
 	void processExitingVehicle_WithFailedTicketUpDate() throws Exception {
 		// given
-
 		when(inputReaderUtil.readVehicleRegistrationNumber())
 				.thenReturn("ABCDEF");
 

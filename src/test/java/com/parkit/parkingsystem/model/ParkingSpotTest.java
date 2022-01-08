@@ -15,37 +15,6 @@ class ParkingSpotTest {
 	}
 
 	@Test
-	void getIdTest() {
-
-		int result = parkingSpot.getId();
-		assertThat(result).isEqualTo(1);
-	}
-	@Test
-	void setIdTest() {
-		parkingSpot.setId(2);
-		assertThat(parkingSpot.getId()).isEqualTo(2);
-	}
-	@Test
-	void getParkingTypeTest() {
-		ParkingType result = parkingSpot.getParkingType();
-		assertThat(result).isEqualTo(ParkingType.CAR);
-	}
-	@Test
-	void setParkingTypeTest() {
-		parkingSpot.setParkingType(ParkingType.BIKE);
-		assertThat(parkingSpot.getParkingType()).isEqualTo(ParkingType.BIKE);
-	}
-	@Test
-	void isAvailableTest() {
-		boolean result = parkingSpot.isAvailable();
-		assertThat(result).isTrue();
-	}
-	@Test
-	void setAvailableTest() {
-		parkingSpot.setAvailable(false);
-		assertThat(parkingSpot.isAvailable()).isFalse();
-	}
-	@Test
 	void equalsTest_withAnEqualObject_shouldReturnTrue() {
 		Object o = new ParkingSpot(1, ParkingType.CAR, true);
 		boolean result = parkingSpot.equals(o);

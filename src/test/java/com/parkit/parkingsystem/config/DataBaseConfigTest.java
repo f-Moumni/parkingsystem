@@ -40,8 +40,11 @@ class DataBaseConfigTest {
 
 	@Test
 	void closeConnection_withExpetion_shouldlogError() throws SQLException {
+		// Given
 		doThrow(SQLException.class).when(connection).close();
+		// When
 		dataBaseConfig.closeConnection(connection);
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error while closing connection");
 		assertThat(connection.isClosed()).isFalse();
@@ -51,16 +54,22 @@ class DataBaseConfigTest {
 	@Test
 	void closePreparedStatement_withExpetion_shouldlogError()
 			throws SQLException {
+		// Given
 		doThrow(SQLException.class).when(preparedStatement).close();
+		// When
 		dataBaseConfig.closePreparedStatement(preparedStatement);
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error while closing prepared statement");
 		assertThat(connection.isClosed()).isFalse();
 	}
 	@Test
 	void closeResultSet_withExpetion_shouldlogError() throws SQLException {
+		// Given
 		doThrow(SQLException.class).when(resultSet).close();
+		// When
 		dataBaseConfig.closeResultSet(resultSet);
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error while closing result set");
 		assertThat(connection.isClosed()).isFalse();

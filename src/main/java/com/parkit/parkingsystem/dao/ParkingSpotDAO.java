@@ -11,12 +11,28 @@ import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
-
+/**
+ * ParkingSpotDAO class define the methods used to process the parking table of
+ * the prod database.
+ */
 public class ParkingSpotDAO {
+	/**
+	 * Initialise a Logger used to send messages to the console.
+	 */
 	private static final Logger LOGGER = LogManager.getLogger("ParkingSpotDAO");
-
+	/**
+	 * Create a DataBasObject used to make a connection with the Prod DataBase.
+	 */
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
-
+	/**
+	 * allows to obtain an available Parking Spot for a type of vehicle.
+	 *
+	 * @param parkingType
+	 *            the type of vehicle
+	 * @see ParkingType
+	 * @return an int, the ParkingSpot id
+	 * @return -1 if parking is full
+	 */
 	public int getNextAvailableSlot(ParkingType parkingType) {
 		Connection con = null;
 		int result = -1;
@@ -40,9 +56,16 @@ public class ParkingSpotDAO {
 		}
 		return result;
 	}
-
+	/**
+	 * Used to update availability of the given ParkingSpot.
+	 * 
+	 * @param parkingSpot
+	 *            the ParkingSpot to update
+	 * @see ParkingSpot
+	 * @return true if the parking space has been updated , False if not .
+	 */
 	public boolean updateParking(ParkingSpot parkingSpot) {
-		// update the availability fo that parking slot
+		// update the availability for that parking slot
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
@@ -65,6 +88,13 @@ public class ParkingSpotDAO {
 		}
 
 	}
+	/**
+	 * check if a Vehicle is already in the parking lot
+	 * 
+	 * @param vehicleRegNumber
+	 *            Vehicle registration number to be verified
+	 * @return true if the Vehicle is in the parking lot, false if it is not.
+	 */
 	public boolean vehicleIsInParking(String vehicleRegNumber) {
 		Connection con = null;
 		boolean result = false;

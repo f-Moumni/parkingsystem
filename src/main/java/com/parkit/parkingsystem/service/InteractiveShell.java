@@ -6,12 +6,24 @@ import org.apache.logging.log4j.Logger;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.util.InputReaderUtil;
-
+/**
+ * /** InteractiveShell class allow interaction between the user and the parking
+ * system
+ *
+ * @author Tek
+ *
+ */
 public class InteractiveShell {
-
+	/**
+	 * display manage the main menu of the application.</br>
+	 * Initialise a Logger used to send messages to the console.
+	 */
 	private static final Logger logger = LogManager
 			.getLogger("InteractiveShell");
-
+	/**
+	 * allow interaction between the user and the parking system
+	 * 
+	 */
 	public static void loadInterface() {
 		logger.info("App initialized!!!");
 		System.out.println("Welcome to Parking System!");
@@ -46,7 +58,9 @@ public class InteractiveShell {
 			}
 		}
 	}
-
+	/**
+	 * the main menu of the application
+	 */
 	private static void loadMenu() {
 		System.out.println(
 				"Please select an option. Simply enter the number to choose an action");

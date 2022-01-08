@@ -4,12 +4,25 @@ import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * InputReaderUtil Class used to read int keyboard inputs, and String
+ * registering number inputs.
+ * 
+ * @author Tek
+ *
+ */
 public class InputReaderUtil {
 
 	private Scanner scan = new Scanner(System.in, "UTF-8");
+	/**
+	 * Initialise a Logger used to send messages to the console.
+	 */
 	private static final Logger LOGGER = LogManager.getLogger("" + "");
-
+	/**
+	 * . Read the selections
+	 * 
+	 * @return input by the selections
+	 */
 	public int readSelection() {
 		try {
 			int input = Integer.parseInt(scan.nextLine());
@@ -21,7 +34,12 @@ public class InputReaderUtil {
 			return -1;
 		}
 	}
-
+	/**
+	 * . Read the number registration vehicle
+	 * 
+	 * @return the number registration vehicle
+	 * @throws Exception
+	 */
 	public String readVehicleRegistrationNumber() throws Exception {
 		try {
 			String vehicleRegNumber = scan.nextLine();

@@ -25,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
-import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
@@ -37,7 +36,6 @@ class TicketDAOTest {
 	Ticket ticket;
 	private static LogCaptor logCaptor;
 
-	private final static DataBasePrepareService dBPrepareService = new DataBasePrepareService();
 	@Mock
 	private static DataBaseTestConfig dataBaseTestConfig;
 	@Mock
@@ -65,6 +63,7 @@ class TicketDAOTest {
 	}
 	@Test
 	void saveTicketTest_shouldReturnTrue() throws SQLException {
+		// Given
 		when(connection.prepareStatement(DBConstants.SAVE_TICKET))
 				.thenReturn(ps);
 		doNothing().when(ps).setInt(1, ticket.getParkingSpot().getId());
@@ -75,7 +74,7 @@ class TicketDAOTest {
 				Timestamp.valueOf(ticket.getInTime()));
 		doNothing().when(ps).setTimestamp(5, null);
 		when(ps.execute()).thenReturn(Boolean.TRUE);
-
+		// When
 		boolean result = ticketDAO.saveTicket(ticket);
 		// Then
 		assertTrue(result);
@@ -149,7 +148,7 @@ class TicketDAOTest {
 	@Test
 	void getTicket_shouldGetTicket_withvehicleRegNumberInParking()
 			throws SQLException {
-
+		// Given
 		String vehicleRegNumber = ticket.getVehicleRegNumber();
 		ticket.setOutTime(LocalDateTime.now());
 		when(connection.prepareStatement(DBConstants.GET_TICKET))
@@ -180,7 +179,6 @@ class TicketDAOTest {
 		String vehicleRegNumber = "ABCD";
 		when(connection.prepareStatement(DBConstants.GET_TICKET))
 				.thenThrow(SQLException.class);
-
 		// When
 		Ticket resultTicket = ticketDAO.getTicket(vehicleRegNumber);
 		// Then
@@ -191,6 +189,7 @@ class TicketDAOTest {
 	}
 	@Test
 	void getTicket_withEmptyTable_shouldGetNullTicket() throws SQLException {
+		// Given
 		String vehicleRegNumber = "ABCD";
 		when(connection.prepareStatement(DBConstants.GET_TICKET))
 				.thenReturn(ps);
@@ -204,26 +203,30 @@ class TicketDAOTest {
 
 	@Test
 	void updateTicket_shouldRetrunTrue() throws SQLException {
+		// Given
 		when(connection.prepareStatement(DBConstants.UPDATE_TICKET))
 				.thenReturn(ps);
-
 		ticket.setOutTime(LocalDateTime.now());
 		doNothing().when(ps).setDouble(1, ticket.getPrice());
 		doNothing().when(ps).setTimestamp(2,
 				Timestamp.valueOf(ticket.getOutTime()));
 		doNothing().when(ps).setString(3, ticket.getVehicleRegNumber());
 		when(ps.execute()).thenReturn(Boolean.TRUE);
+		// When
 		boolean result = ticketDAO.updateTicket(ticket);
+		// Then
 		assertTrue(result);
 	}
 
 	@Test
 	void updateTicket_DatabaseAccesError_shouldRetrunFalse()
 			throws SQLException {
+		// Given
 		when(connection.prepareStatement(DBConstants.UPDATE_TICKET))
 				.thenThrow(SQLException.class);
-
+		// When
 		boolean result = ticketDAO.updateTicket(ticket);
+		// Then
 		assertFalse(result);
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error saving ticket info");
@@ -232,6 +235,7 @@ class TicketDAOTest {
 	@Test
 	void recurrentUser_WithARecurringUser_shouldRetrunTrue()
 			throws SQLException {
+		// Given
 		String vehicleRegNumber = "ABCD";
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_TICKET))
 				.thenReturn(ps);
@@ -239,11 +243,14 @@ class TicketDAOTest {
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(true);
 		when(rs.getString(1)).thenReturn(vehicleRegNumber);
+		// When
 		boolean result = ticketDAO.recurrentUser(vehicleRegNumber);
+		// Then
 		assertTrue(result);
 	}
 	@Test
 	void recurrentUser_WithANewUser_shouldRetrunFalse() throws SQLException {
+		// Given
 		String vehicleRegNumber = "ABCD";
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_TICKET))
 				.thenReturn(ps);
@@ -251,17 +258,22 @@ class TicketDAOTest {
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(true);
 		when(rs.getString(1)).thenReturn(null);
+		// When
 		boolean result = ticketDAO.recurrentUser(vehicleRegNumber);
+		// Then
 		assertFalse(result);
 	}
 	@Test
 	void recurrentUser_WithDatabaseAccesError_shouldRetrunTrue()
 			throws SQLException {
+		// Given
 		String vehicleRegNumber = "ABCD";
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_TICKET))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenThrow(SQLException.class);
+		// When
 		boolean result = ticketDAO.recurrentUser(vehicleRegNumber);
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error fetching recurrent User ");
 		assertFalse(result);

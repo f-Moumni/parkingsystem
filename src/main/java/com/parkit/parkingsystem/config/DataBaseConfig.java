@@ -11,11 +11,23 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/*
+ * DataBaseConfig allows to manage the connection to the database
+  * 
+ */
 public class DataBaseConfig {
-
+	/**
+	 * LOGGER initialized to send console message.
+	 */
 	private static final Logger LOGGER = LogManager.getLogger("DataBaseConfig");
 
+	/**
+	 * Create a connection to MySQL database.
+	 *
+	 * @return a Connection instance
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public Connection getConnection()
 			throws ClassNotFoundException, SQLException, IOException {
 		LOGGER.info("Create DB connection");
@@ -41,6 +53,12 @@ public class DataBaseConfig {
 				props.getProperty("jdbc.password"));
 	}
 
+	/**
+	 * Close the given Connection.
+	 *
+	 * @param con
+	 *            the Connection to close
+	 */
 	public void closeConnection(Connection con) {
 		if (con != null) {
 			try {
@@ -51,7 +69,12 @@ public class DataBaseConfig {
 			}
 		}
 	}
-
+	/**
+	 * Close the given PreparedStatement.
+	 *
+	 * @param ps
+	 *            the PreparedStatement to close
+	 */
 	public void closePreparedStatement(PreparedStatement ps) {
 		if (ps != null) {
 			try {
@@ -62,7 +85,12 @@ public class DataBaseConfig {
 			}
 		}
 	}
-
+	/**
+	 * Close the given ResultSet.
+	 *
+	 * @param rs
+	 *            the ResultSet to close
+	 */
 	public void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {

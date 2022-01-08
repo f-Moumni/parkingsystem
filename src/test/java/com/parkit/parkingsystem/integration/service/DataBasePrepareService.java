@@ -25,25 +25,7 @@ public class DataBasePrepareService {
 		} finally {
 			dataBaseTestConfig.closeConnection(connection);
 		}
+
 	}
-	// public void changeTheInTime(String vehicleRegNumber,
-	// LocalDateTime dateTime) {
-	// Connection connection = null;
-	// try {
-	// connection = dataBaseTestConfig.getConnection();
-	//
-	// // change the entry date to an earlier date
-	// PreparedStatement ps = connection.prepareStatement(
-	// "update ticket set IN_TIME = ? where VEHICLE_REG_NUMBER = ? order by ID
-	// DESC LIMIT 1");
-	// ps.setTimestamp(1, Timestamp.valueOf(dateTime));
-	// ps.setString(2, vehicleRegNumber);
-	// ps.execute();
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// } finally {
-	// dataBaseTestConfig.closeConnection(connection);
-	// }
-	// }
 
 }

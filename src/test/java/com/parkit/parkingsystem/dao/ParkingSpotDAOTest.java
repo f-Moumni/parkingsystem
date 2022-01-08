@@ -51,36 +51,42 @@ class ParkingSpotDAOTest {
 	@Test
 	void getNextAvailableSlot_ForCar_ShouldRetrunParkingNumber()
 			throws Exception {
+		// Given
 		when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(true);
 		when(rs.getInt(1)).thenReturn(2);
-
-		assertThat(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR))
-				.isEqualTo(2);
+		// When
+		int result = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
+		// Then
+		assertThat(result).isEqualTo(2);
 	}
 
 	@Test
 	void getNextAvailableSlot_ForBike_ShouldRetrunParkingNumber()
 			throws Exception {
+		// Given
 		when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(true);
 		when(rs.getInt(1)).thenReturn(4);
-
-		assertThat(parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE))
-				.isEqualTo(4);
+		// When
+		int result = parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE);
+		// Then
+		assertThat(result).isEqualTo(4);
 	}
 	@Test
 	void getNextAvailableSlot_WithDatabaseAccesError__ShouldLogError()
 			throws SQLException {
+		// Given
 		when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenThrow(SQLException.class);
-
+		// When
 		int result = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
+		// Then
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error fetching next available slot");
 		assertThat(result).isEqualTo(-1);
@@ -90,12 +96,14 @@ class ParkingSpotDAOTest {
 	@Test
 	void getNextAvailableSlot_WithFullParking_ShouldReturnMinusOne()
 			throws SQLException {
+		// Given
 		when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(false);
+		// When
 		int result = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
-
+		// Then
 		assertThat(result).isEqualTo(-1);
 
 	}
@@ -103,33 +111,35 @@ class ParkingSpotDAOTest {
 	@Test
 	void updateParking_withInvalidParkingNumber_ShouldReturnFlase()
 			throws SQLException {
+		// Given
 		ParkingSpot parkingSpot = new ParkingSpot(0, ParkingType.CAR, true);
 		when(connection.prepareStatement(DBConstants.UPDATE_PARKING_SPOT))
 				.thenReturn(ps);
 		when(ps.executeUpdate()).thenReturn(0);
-
+		// When Then
 		assertFalse(parkingSpotDAO.updateParking(parkingSpot));
 
 	}
 	@Test
 	void updateParking_withAvalidParkingSpot_ShouldReturnTrue()
 			throws SQLException {
+		// Given
 		ParkingSpot parkingSpot = new ParkingSpot(4, ParkingType.BIKE, true);
 		when(connection.prepareStatement(DBConstants.UPDATE_PARKING_SPOT))
 				.thenReturn(ps);
 		when(ps.executeUpdate()).thenReturn(1);
-
+		// When Then
 		assertTrue(parkingSpotDAO.updateParking(parkingSpot));
 	}
 
 	@Test
 	void updateParking_withDatabaseAccesError_shouldReturnFalseAndLogError()
 			throws SQLException {
+		// Given
 		ParkingSpot parkingSpot = new ParkingSpot(4, ParkingType.BIKE, false);
 		when(connection.prepareStatement(DBConstants.UPDATE_PARKING_SPOT))
 				.thenThrow(SQLException.class);
-		// when(ps.executeUpdate()).thenThrow(SQLException.class);
-
+		// When Then
 		assertFalse(parkingSpotDAO.updateParking(parkingSpot));
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error updating parking info");
@@ -139,32 +149,38 @@ class ParkingSpotDAOTest {
 	@Test
 	void vehicleIsInParking_withvehicleIsInParking_shouldReturnFalse()
 			throws SQLException {
+		// Given
 		String vehicleRegNumber = "AAA";
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(true);
 		when(rs.getString(1)).thenReturn("AAA");
+		// When Then
 		assertTrue(parkingSpotDAO.vehicleIsInParking(vehicleRegNumber));
 	}
 	@Test
 	void vehicleIsInParking_withvehicleNOTInParking_shouldReturnTrue()
 			throws SQLException {
+		// Given
 		String vehicleRegNumber = "ABCDE";
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(true);
 		when(rs.getString(1)).thenReturn(null);
+		// When Then
 		assertFalse(parkingSpotDAO.vehicleIsInParking(vehicleRegNumber));
 	}
 	@Test
 	void vehicleIsInParking_withNullvehicleRegNumber_shouldReturnFalseAndLogError()
 			throws Exception, SQLException {
+		// Given
 		String vehicleRegNumber = null;
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING))
 				.thenReturn(ps);
 		doThrow(SQLException.class).when(ps).setString(1, vehicleRegNumber);
+		// When Then
 		assertFalse(parkingSpotDAO.vehicleIsInParking(vehicleRegNumber));
 		assertThat(logCaptor.getErrorLogs())
 				.contains("Error vehicule exit controlling");
@@ -172,12 +188,13 @@ class ParkingSpotDAOTest {
 	@Test
 	void vehicleIsInParking_withEmptyData_shouldReturnFalse()
 			throws Exception, SQLException {
+		// Given
 		String vehicleRegNumber = "ABCDE";
 		when(connection.prepareStatement(DBConstants.GET_VEHICLES_IN_PARKING))
 				.thenReturn(ps);
 		when(ps.executeQuery()).thenReturn(rs);
 		when(rs.next()).thenReturn(false);
-
+		// When Then
 		assertFalse(parkingSpotDAO.vehicleIsInParking(vehicleRegNumber));
 
 	}

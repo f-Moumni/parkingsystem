@@ -13,13 +13,31 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-
+/**
+ * TicketDAO class define the methods used to process the Ticket table of the
+ * prod database.
+ * 
+ * @author Tek ,Fatima
+ * @see Ticket
+ * @see DBConstants
+ * @see DataBaseConfig
+ */
 public class TicketDAO {
-
+	/**
+	 * Initialise a Logger used to send messages to the console.
+	 */
 	private static final Logger LOGGER = LogManager.getLogger("TicketDAO");
-
+	/**
+	 * Create a DataBasObject used to make a connection with the Prod DataBase.
+	 */
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
-
+	/**
+	 * Used to save the given ticket in the ticket table of prod DB.
+	 *
+	 * @param ticket
+	 *            the Ticket to save
+	 * @return true if the ticket is saved, false if not .
+	 */
 	public boolean saveTicket(Ticket ticket) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -46,7 +64,13 @@ public class TicketDAO {
 			dataBaseConfig.closeConnection(con);
 		}
 	}
-
+	/**
+	 * Used to get the latest Ticket of the given vehicleRegNumber.
+	 *
+	 * @param vehicleRegNumber
+	 *            Vehicle registration number of the ticket
+	 * @return the latest Ticket of the given vehicleRegNumber
+	 */
 	public Ticket getTicket(String vehicleRegNumber) {
 		Connection con = null;
 		Ticket ticket = null;
@@ -83,7 +107,14 @@ public class TicketDAO {
 		}
 		return ticket;
 	}
-
+	/**
+	 * used to update given ticket with price and outTime
+	 * 
+	 * @param ticket
+	 *            the Ticket to be updated
+	 * @return true if the ticket was updated successfully false if the updating
+	 *         process failed
+	 */
 	public boolean updateTicket(Ticket ticket) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -98,13 +129,20 @@ public class TicketDAO {
 			return true;
 		} catch (Exception ex) {
 			LOGGER.error("Error saving ticket info", ex);
-			return false;
+
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
-
+		return false;
 	}
+	/**
+	 * used to check if the Vehicle has already been in parking
+	 * 
+	 * @param vehicleRegNumber
+	 *            Vehicle registration number to be verified
+	 * @return true if the Vehicle has already been in parking, False if not .
+	 */
 	public boolean recurrentUser(String vehicleRegNumber) {
 		Connection con = null;
 		boolean result = false;

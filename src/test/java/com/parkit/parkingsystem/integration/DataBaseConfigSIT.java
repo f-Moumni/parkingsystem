@@ -51,14 +51,18 @@ class DataBaseConfigSIT {
 	@Test
 	void closePreparedStatement_shouldclosePreparedStatement()
 			throws SQLException {
-
+		// When
 		dataBaseConfig.closePreparedStatement(preparedstatement);
+		// Then
 		assertTrue(preparedstatement.isClosed());
 	}
 	@Test
 	void closeResult_shouldcloseResultSet() throws SQLException {
+		// Given
 		resultSet = preparedstatement.executeQuery();
+		// When
 		dataBaseConfig.closeResultSet(resultSet);
+		// Then
 		assertTrue(resultSet.isClosed());
 	}
 
