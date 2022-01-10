@@ -57,7 +57,7 @@ public class TicketDAO {
 
 			return ps.execute();
 		} catch (Exception ex) {
-			LOGGER.error("Error fetching next available slot", ex);
+			LOGGER.error("Error fetching next available slot");
 			return false;
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
@@ -97,7 +97,7 @@ public class TicketDAO {
 			}
 
 		} catch (Exception ex) {
-			LOGGER.error("Error fetching next available slot", ex);
+			LOGGER.error("Error fetching next available slot");
 		} finally {
 
 			dataBaseConfig.closeResultSet(rs);
@@ -128,7 +128,7 @@ public class TicketDAO {
 			ps.execute();
 			return true;
 		} catch (Exception ex) {
-			LOGGER.error("Error saving ticket info", ex);
+			LOGGER.error("Error saving ticket info");
 
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
@@ -157,7 +157,7 @@ public class TicketDAO {
 			}
 			dataBaseConfig.closeResultSet(rs);
 		} catch (Exception ex) {
-			LOGGER.error("Error fetching recurrent User ", ex);
+			LOGGER.error("Error fetching recurrent User ");
 		} finally {
 
 			dataBaseConfig.closePreparedStatement(ps);
