@@ -40,8 +40,7 @@ public class InputReaderUtilTest {
 				in.getBytes(StandardCharsets.UTF_8));
 		System.setIn(stream);
 		inputReaderUtil = new InputReaderUtil();
-		// When
-
+		
 		// then
 		assertThat(inputReaderUtil.readSelection()).isEqualTo(1);
 		System.setIn(System.in);
@@ -50,16 +49,15 @@ public class InputReaderUtilTest {
 
 	@Test
 	void readSelectionTest_WithInvalidInput() throws IOException {
+		// Given
 		System.setIn(System.in);
 		String input = "m";
 		ByteArrayInputStream stream = new ByteArrayInputStream(
 				input.getBytes());
 		System.setIn(stream);
 		inputReaderUtil = new InputReaderUtil();
+		// then
 		assertThat(inputReaderUtil.readSelection()).isEqualTo(-1);
-		// assertThat(logCaptor.getErrorLogs())
-		// .contains("Error while reading user input from Shell");
-		// System.setIn(System.in);
 		stream.close();
 	}
 

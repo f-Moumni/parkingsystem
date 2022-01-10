@@ -48,7 +48,7 @@ public class ParkingSpotDAO {
 			}
 
 		} catch (Exception ex) {
-			LOGGER.error("Error fetching next available slot", ex);
+			LOGGER.error("Error fetching next available slot");
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);
@@ -77,7 +77,7 @@ public class ParkingSpotDAO {
 
 			return (updateRowCount == 1);
 		} catch (Exception ex) {
-			LOGGER.error("Error updating parking info", ex);
+			LOGGER.error("Error updating parking info");
 			return false;
 		} finally {
 			if (ps != null) {
@@ -113,7 +113,7 @@ public class ParkingSpotDAO {
 			}
 
 		} catch (Exception ex) {
-			LOGGER.error("Error vehicule exit controlling", ex);
+			LOGGER.error("Error vehicule exit controlling");
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);

@@ -5,8 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.parkit.parkingsystem.service.InteractiveShell;
 /**
- * 
- * @author utilisateur1
+ * class main 
+ * @author Tek
  *
  */
 public class App {
@@ -14,7 +14,7 @@ public class App {
 
 	/**
 	 * 
-	 * @param args
+	 * method main 
 	 */
 	public static void main(String[] args) {
 		LOGGER.info("Initializing Parking System");

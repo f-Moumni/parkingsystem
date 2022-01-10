@@ -23,7 +23,7 @@ public class DBConstants {
 	/**
 	 * SQL query used to get a ticket from Database.
 	 */
-	public static final String GET_TICKET = "select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=? order by t.IN_TIME DESC limit 1";
+	public static final String GET_TICKET = "select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=? t.OUT_TIME is NULL  order  by t.IN_TIME DESC limit 1";
 	/**
 	 * SQL query used to get a vehicles in parking .
 	 */
