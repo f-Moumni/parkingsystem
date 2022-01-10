@@ -4,8 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.parkit.parkingsystem.service.InteractiveShell;
-/**
- * class main 
+
+/*
+ * class main
+ * 
  * @author Tek
  *
  */
@@ -13,9 +15,9 @@ public class App {
 	private static final Logger LOGGER = LogManager.getLogger("App");
 
 	/**
-	 * 
-	 * method main 
+	 * method main
 	 */
+
 	public static void main(String[] args) {
 		LOGGER.info("Initializing Parking System");
 		InteractiveShell.loadInterface();
