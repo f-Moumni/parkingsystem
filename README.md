@@ -38,18 +38,25 @@ This code uses the default root account to connect and the password can be set a
 Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the data base.
 For this, please run the sql commands present in the `Data.sql` file under the `resources` folder in the code base.
 
+
 go to the `parkingsystem` folder <br>
 
 And then compile and generate the final jar by running: `mvn package`<br>
 
 Finally, run  the program with <br>
+
 `java -jar target/parking-system-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
 
 
 ### Testing
 
-To run the tests from maven, go to the folder that contains the pom.xml file and execute the below command.<br>
-`mvn site`<br>
+To run the tests from maven, go to the folder that contains the pom.xml file and execute the command :`mvn verify`<br>
+
+
+To generate a site that includes project's reports,please run :`mvn site`<br>
+
 You will find all the reports on `project-reports.html` page<br>
+
 Path : `/target/site/project-reports.html`
+
